@@ -39,10 +39,10 @@ func TestGithubIssue_FindComment(t *testing.T) {
 				Repo:  "test-repo",
 			},
 			comments: []*github.IssueComment{
-				{Body: github.String("<!-- id: test-key -->\ntest comment\n")},
+				{Body: github.Ptr("<!-- id: test-key -->\ntest comment\n")},
 			},
 			want: &github.IssueComment{
-				Body: github.String("<!-- id: test-key -->\ntest comment\n"),
+				Body: github.Ptr("<!-- id: test-key -->\ntest comment\n"),
 			},
 		},
 		{
@@ -53,7 +53,7 @@ func TestGithubIssue_FindComment(t *testing.T) {
 				Repo:  "test-repo",
 			},
 			comments: []*github.IssueComment{
-				{Body: github.String("other comment")},
+				{Body: github.Ptr("other comment")},
 			},
 			wantErr: ErrCommentNotFound,
 		},
@@ -65,11 +65,11 @@ func TestGithubIssue_FindComment(t *testing.T) {
 				Repo:  "test-repo",
 			},
 			comments: []*github.IssueComment{
-				{Body: github.String("other comment")},
-				{Body: github.String("<!-- id: test-key -->\ntest comment\n")},
-				{Body: github.String("another comment")},
+				{Body: github.Ptr("other comment")},
+				{Body: github.Ptr("<!-- id: test-key -->\ntest comment\n")},
+				{Body: github.Ptr("another comment")},
 			},
-			want: &github.IssueComment{Body: github.String("<!-- id: test-key -->\ntest comment\n")},
+			want: &github.IssueComment{Body: github.Ptr("<!-- id: test-key -->\ntest comment\n")},
 		},
 	}
 
@@ -117,7 +117,7 @@ func TestGithubIssue_AddComment(t *testing.T) {
 				Update:  false,
 			},
 			want: &github.IssueComment{
-				Body: github.String("<!-- id: test-key -->\ntest message\n"),
+				Body: github.Ptr("<!-- id: test-key -->\ntest message\n"),
 			},
 		},
 		{
@@ -130,10 +130,10 @@ func TestGithubIssue_AddComment(t *testing.T) {
 				Update:  true,
 			},
 			comments: []*github.IssueComment{
-				{ID: github.Int64(123), Body: github.String("<!-- id: test-key -->\ntest message\n")},
+				{ID: github.Ptr[int64](123), Body: github.Ptr("<!-- id: test-key -->\ntest message\n")},
 			},
 			want: &github.IssueComment{
-				Body: github.String("<!-- id: test-key -->\ntest message\n"),
+				Body: github.Ptr("<!-- id: test-key -->\ntest message\n"),
 			},
 		},
 		{
@@ -146,7 +146,7 @@ func TestGithubIssue_AddComment(t *testing.T) {
 				Update:  true,
 			},
 			want: &github.IssueComment{
-				Body: github.String("<!-- id: test-key -->\ntest message\n"),
+				Body: github.Ptr("<!-- id: test-key -->\ntest message\n"),
 			},
 		},
 		{
@@ -180,7 +180,7 @@ func TestGithubIssue_AddComment(t *testing.T) {
 				mockClient.
 					On("EditComment", mock.Anything, tt.issueOpt.Owner, tt.issueOpt.Repo, mock.Anything, mock.Anything).
 					Return(&github.IssueComment{
-						Body: github.String(fmt.Sprintf("<!-- id: %s -->\n%s\n", tt.issueOpt.Key, tt.issueOpt.Message)),
+						Body: github.Ptr(fmt.Sprintf("<!-- id: %s -->\n%s\n", tt.issueOpt.Key, tt.issueOpt.Message)),
 					}, nil, nil)
 			}
 
@@ -188,7 +188,7 @@ func TestGithubIssue_AddComment(t *testing.T) {
 				var comment *github.IssueComment
 				if tt.wantErr == nil {
 					comment = &github.IssueComment{
-						Body: github.String(fmt.Sprintf("<!-- id: %s -->\n%s\n", tt.issueOpt.Key, tt.issueOpt.Message)),
+						Body: github.Ptr(fmt.Sprintf("<!-- id: %s -->\n%s\n", tt.issueOpt.Key, tt.issueOpt.Message)),
 					}
 				}
 
