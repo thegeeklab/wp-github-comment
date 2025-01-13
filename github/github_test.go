@@ -130,7 +130,7 @@ func TestGithubIssue_AddComment(t *testing.T) {
 				Update:  true,
 			},
 			comments: []*github.IssueComment{
-				{ID: github.Ptr[int64](123), Body: github.Ptr("<!-- id: test-key -->\ntest message\n")},
+				{ID: github.Ptr(int64(123)), Body: github.Ptr("<!-- id: test-key -->\ntest message\n")},
 			},
 			want: &github.IssueComment{
 				Body: github.Ptr("<!-- id: test-key -->\ntest message\n"),
