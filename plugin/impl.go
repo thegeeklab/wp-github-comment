@@ -10,7 +10,7 @@ import (
 
 	"github.com/rs/zerolog/log"
 	gh "github.com/thegeeklab/wp-github-comment/github"
-	plugin_file "github.com/thegeeklab/wp-plugin-go/v4/file"
+	plugin_file "github.com/thegeeklab/wp-plugin-go/v6/file"
 )
 
 var ErrPluginEventNotSupported = errors.New("event not supported")
@@ -73,7 +73,7 @@ func (p *Plugin) Execute() error {
 		Message: p.Settings.Message,
 		Update:  p.Settings.Update,
 		Key:     p.Settings.Key,
-		Number:  p.Metadata.Curr.PullRequest,
+		Number:  int(p.Metadata.Curr.PullRequest),
 	}
 
 	if p.Settings.SkipMissing && !p.Settings.IsFile {
