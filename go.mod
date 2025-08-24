@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/google/go-github/v74 v74.0.0
 	github.com/rs/zerolog v1.34.0
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.0
 	github.com/thegeeklab/wp-plugin-go/v6 v6.0.5
 	github.com/urfave/cli/v3 v3.4.1
 	golang.org/x/oauth2 v0.30.0
