@@ -3,7 +3,7 @@ package github
 import (
 	"context"
 
-	"github.com/google/go-github/v74/github"
+	"github.com/google/go-github/v75/github"
 )
 
 // APIClient is an interface that wraps the GitHub API client.
