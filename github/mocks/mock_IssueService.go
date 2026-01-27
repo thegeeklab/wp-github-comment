@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	github "github.com/google/go-github/v81/github"
+	github "github.com/google/go-github/v82/github"
 	mock "github.com/stretchr/testify/mock"
 )
 
