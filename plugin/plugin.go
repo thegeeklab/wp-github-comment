@@ -23,7 +23,7 @@ type Settings struct {
 	Key         string
 	Message     string
 	Update      bool
-	APIKey      string
+	APIKey      string //nolint:gosec
 	SkipMissing bool
 	IsFile      bool
 
