@@ -15,7 +15,6 @@ import (
 
 var ErrPluginEventNotSupported = errors.New("event not supported")
 
-//nolint:revive
 func (p *Plugin) run(ctx context.Context) error {
 	if err := p.Validate(); err != nil {
 		return fmt.Errorf("validation failed: %w", err)
