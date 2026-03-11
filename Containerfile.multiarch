@@ -17,5 +17,9 @@ LABEL org.opencontainers.image.url="https://github.com/thegeeklab/wp-github-comm
 LABEL org.opencontainers.image.source="https://github.com/thegeeklab/wp-github-comment"
 LABEL org.opencontainers.image.documentation="https://github.com/thegeeklab/wp-github-comment"
 
+RUN apk upgrade --no-cache zlib && \
+    rm -rf /var/cache/apk/* && \
+    rm -rf /tmp/*
+
 COPY --from=build /src/dist/wp-github-comment /bin/wp-github-comment
 ENTRYPOINT ["/bin/wp-github-comment"]
