@@ -6,7 +6,7 @@ require (
 	github.com/google/go-github/v85 v85.0.0
 	github.com/rs/zerolog v1.35.1
 	github.com/stretchr/testify v1.11.1
-	github.com/thegeeklab/wp-plugin-go/v6 v6.0.15
+	github.com/thegeeklab/wp-plugin-go/v6 v6.0.16
 	github.com/urfave/cli/v3 v3.8.0
 	golang.org/x/oauth2 v0.36.0
 )
@@ -14,7 +14,7 @@ require (
 require (
 	dario.cat/mergo v1.0.1 // indirect
 	github.com/Masterminds/goutils v1.1.1 // indirect
-	github.com/Masterminds/semver/v3 v3.4.0 // indirect
+	github.com/Masterminds/semver/v3 v3.5.0 // indirect
 	github.com/Masterminds/sprig/v3 v3.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/google/go-querystring v1.2.0 // indirect
