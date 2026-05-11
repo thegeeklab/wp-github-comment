@@ -1,6 +1,6 @@
 module github.com/thegeeklab/wp-github-comment
 
-go 1.26.2
+go 1.26.3
 
 require (
 	github.com/google/go-github/v86 v86.0.0
