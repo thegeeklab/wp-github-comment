@@ -65,7 +65,18 @@ func (p *Plugin) Validate() error {
 
 // Execute provides the implementation of the plugin.
 func (p *Plugin) Execute() error {
-	client := gh.NewClient(p.Network.Context, p.Settings.baseURL, p.Settings.APIKey, p.Network.Client)
+	if p.Settings.SkipMissing && !p.Settings.IsFile {
+		log.Info().
+			Msg("comment skipped: 'message' is not a valid path or file does not exist while 'skip-missing' is enabled")
+
+		return nil
+	}
+
+	client, err := gh.NewClient(p.Settings.baseURL, p.Settings.APIKey)
+	if err != nil {
+		return fmt.Errorf("failed to create client: %w", err)
+	}
+
 	client.Issue.Opt = gh.IssueOptions{
 		Repo:    p.Metadata.Repository.Name,
 		Owner:   p.Metadata.Repository.Owner,
@@ -75,14 +86,7 @@ func (p *Plugin) Execute() error {
 		Number:  int(p.Metadata.Curr.PullRequest),
 	}
 
-	if p.Settings.SkipMissing && !p.Settings.IsFile {
-		log.Info().
-			Msg("comment skipped: 'message' is not a valid path or file does not exist while 'skip-missing' is enabled")
-
-		return nil
-	}
-
-	_, err := client.Issue.AddComment(p.Network.Context)
+	_, err = client.Issue.AddComment(p.Network.Context)
 	if err != nil {
 		return fmt.Errorf("failed to create or update comment: %w", err)
 	}
