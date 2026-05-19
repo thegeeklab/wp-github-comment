@@ -4,12 +4,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net/http"
 	"net/url"
 	"strings"
 
-	"github.com/google/go-github/v86/github"
-	"golang.org/x/oauth2"
+	"github.com/google/go-github/v87/github"
+)
+
+const (
+	// DefaultBaseURL is the default GitHub API base URL.
+	DefaultBaseURL = "https://api.github.com/"
+	// DefaultAPIHost is the host portion of the default GitHub API base URL.
+	DefaultAPIHost = "api.github.com"
 )
 
 var ErrCommentNotFound = errors.New("comment not found")
@@ -33,18 +38,20 @@ type IssueOptions struct {
 	Update  bool
 }
 
-// NewGitHubClient creates a new GitHubClient instance that wraps the provided GitHub API client.
+// NewClient creates a new GitHubClient instance that wraps the provided GitHub API client.
 // The GitHubClient provides a higher-level interface for interacting with the GitHub API,
 // including methods for managing GitHub issues.
-func NewClient(ctx context.Context, url *url.URL, token string, client *http.Client) *Client {
-	ts := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})
-	tc := oauth2.NewClient(
-		context.WithValue(ctx, oauth2.HTTPClient, client),
-		ts,
-	)
+func NewClient(baseURL *url.URL, token string) (*Client, error) {
+	opts := []github.ClientOptionsFunc{github.WithAuthToken(token)}
 
-	c := github.NewClient(tc)
-	c.BaseURL = url
+	if baseURL.Host != DefaultAPIHost {
+		opts = append(opts, github.WithEnterpriseURLs(baseURL.String(), baseURL.String()))
+	}
+
+	c, err := github.NewClient(opts...)
+	if err != nil {
+		return nil, err
+	}
 
 	return &Client{
 		client: c,
@@ -52,7 +59,7 @@ func NewClient(ctx context.Context, url *url.URL, token string, client *http.Cli
 			client: &IssueServiceImpl{client: c},
 			Opt:    IssueOptions{},
 		},
-	}
+	}, nil
 }
 
 // AddComment adds a new comment or updates an existing comment on a GitHub issue.

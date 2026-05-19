@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/url"
 
+	gh "github.com/thegeeklab/wp-github-comment/github"
 	plugin_base "github.com/thegeeklab/wp-plugin-go/v6/plugin"
 	"github.com/urfave/cli/v3"
 )
@@ -75,7 +76,7 @@ func Flags(settings *Settings, category string) []cli.Flag {
 			Name:        "base-url",
 			Sources:     cli.EnvVars("PLUGIN_BASE_URL", "GITHUB_COMMENT_BASE_URL"),
 			Usage:       "API URL",
-			Value:       "https://api.github.com/",
+			Value:       gh.DefaultBaseURL,
 			Destination: &settings.BaseURL,
 			Category:    category,
 		},

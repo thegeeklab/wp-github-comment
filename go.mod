@@ -3,12 +3,11 @@ module github.com/thegeeklab/wp-github-comment
 go 1.26.3
 
 require (
-	github.com/google/go-github/v86 v86.0.0
+	github.com/google/go-github/v87 v87.0.0
 	github.com/rs/zerolog v1.35.1
 	github.com/stretchr/testify v1.11.1
 	github.com/thegeeklab/wp-plugin-go/v6 v6.0.17
 	github.com/urfave/cli/v3 v3.9.0
-	golang.org/x/oauth2 v0.36.0
 )
 
 require (
