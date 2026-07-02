@@ -5,7 +5,6 @@ title: wp-github-comment
 [![Build Status](https://ci.thegeeklab.de/api/badges/thegeeklab/wp-github-comment/status.svg)](https://ci.thegeeklab.de/repos/thegeeklab/wp-github-comment)
 [![Docker Hub](https://img.shields.io/badge/dockerhub-latest-blue.svg?logo=docker&logoColor=white)](https://hub.docker.com/r/thegeeklab/wp-github-comment)
 [![Quay.io](https://img.shields.io/badge/quay-latest-blue.svg?logo=docker&logoColor=white)](https://quay.io/repository/thegeeklab/wp-github-comment)
-[![Go Report Card](https://goreportcard.com/badge/github.com/thegeeklab/wp-github-comment)](https://goreportcard.com/report/github.com/thegeeklab/wp-github-comment)
 [![GitHub contributors](https://img.shields.io/github/contributors/thegeeklab/wp-github-comment)](https://github.com/thegeeklab/wp-github-comment/graphs/contributors)
 [![Source: GitHub](https://img.shields.io/badge/source-github-blue.svg?logo=github&logoColor=white)](https://github.com/thegeeklab/wp-github-comment)
 [![License: MIT](https://img.shields.io/github/license/thegeeklab/wp-github-comment)](https://github.com/thegeeklab/wp-github-comment/blob/main/LICENSE)
