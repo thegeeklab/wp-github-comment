@@ -178,7 +178,7 @@ func TestGithubIssue_AddComment(t *testing.T) {
 
 			if tt.issueOpt.Update && tt.comments != nil {
 				mockClient.
-					On("EditComment", mock.Anything, tt.issueOpt.Owner, tt.issueOpt.Repo, mock.Anything, mock.Anything).
+					On("UpdateComment", mock.Anything, tt.issueOpt.Owner, tt.issueOpt.Repo, mock.Anything, mock.Anything).
 					Return(&github.IssueComment{
 						Body: github.Ptr(fmt.Sprintf("<!-- id: %s -->\n%s\n", tt.issueOpt.Key, tt.issueOpt.Message)),
 					}, nil, nil)
