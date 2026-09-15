@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/google/go-github/v90/github"
+	"github.com/google/go-github/v92/github"
 )
 
 const (
@@ -67,13 +67,13 @@ func NewClient(baseURL *url.URL, token string) (*Client, error) {
 // body and attempt to find and update the existing comment with that identifier.
 // Otherwise, it will create a new comment on the issue.
 func (i *Issue) AddComment(ctx context.Context) (*github.IssueComment, error) {
-	issueComment := &github.IssueComment{
-		Body: &i.Opt.Message,
+	issueComment := github.IssueCommentRequest{
+		Body: i.Opt.Message,
 	}
 
 	if i.Opt.Update {
 		// Append plugin comment ID to comment message so we can search for it later
-		*issueComment.Body = fmt.Sprintf("%s\n<!-- id: %s -->\n", i.Opt.Message, i.Opt.Key)
+		issueComment.Body = fmt.Sprintf("%s\n<!-- id: %s -->\n", i.Opt.Message, i.Opt.Key)
 
 		comment, err := i.FindComment(ctx)
 		if err != nil && !errors.Is(err, ErrCommentNotFound) {
@@ -81,7 +81,7 @@ func (i *Issue) AddComment(ctx context.Context) (*github.IssueComment, error) {
 		}
 
 		if comment != nil {
-			comment, _, err = i.client.EditComment(ctx, i.Opt.Owner, i.Opt.Repo, *comment.ID, issueComment)
+			comment, _, err = i.client.UpdateComment(ctx, i.Opt.Owner, i.Opt.Repo, *comment.ID, issueComment)
 
 			return comment, err
 		}
