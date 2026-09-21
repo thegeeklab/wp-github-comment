@@ -5,7 +5,7 @@ import (
 	"net/url"
 
 	gh "github.com/thegeeklab/wp-github-comment/github"
-	plugin_base "github.com/thegeeklab/wp-plugin-go/v6/plugin"
+	plugin_base "github.com/thegeeklab/wp-plugin-go/v7/plugin"
 	"github.com/urfave/cli/v3"
 )
 
