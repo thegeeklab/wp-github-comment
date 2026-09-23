@@ -3,13 +3,14 @@ package plugin
 import (
 	"fmt"
 	"net/url"
+	"slices"
 
 	gh "github.com/thegeeklab/wp-github-comment/github"
-	plugin_base "github.com/thegeeklab/wp-plugin-go/v6/plugin"
+	plugin_base "github.com/thegeeklab/wp-plugin-go/v7/plugin"
 	"github.com/urfave/cli/v3"
 )
 
-//go:generate go run ../internal/doc/main.go -output=../docs/data/data-raw.yaml
+//go:generate go run ../hack/docs-gen/main.go -output=../docs/data/data.yaml
 
 // Plugin implements provide the plugin.
 type Plugin struct {
@@ -37,9 +38,13 @@ func New(e plugin_base.ExecuteFunc, build ...string) *Plugin {
 	}
 
 	options := plugin_base.Options{
-		Name:                "wp-github-comment",
-		Description:         "Add comments to GitHub Issues and Pull Requests",
-		Flags:               Flags(p.Settings, plugin_base.FlagsPluginCategory),
+		Name:        "wp-github-comment",
+		Description: "Add comments to GitHub Issues and Pull Requests",
+		Flags: slices.Concat(
+			plugin_base.LoggingFlags(plugin_base.FlagsPluginCategory),
+			plugin_base.NetworkFlags(plugin_base.FlagsPluginCategory),
+			Flags(p.Settings, plugin_base.FlagsPluginCategory),
+		),
 		Execute:             p.run,
 		HideWoodpeckerFlags: true,
 	}
@@ -64,6 +69,7 @@ func New(e plugin_base.ExecuteFunc, build ...string) *Plugin {
 // Flags returns a slice of CLI flags for the plugin.
 func Flags(settings *Settings, category string) []cli.Flag {
 	return []cli.Flag{
+		// Personal access token to access the GitHub API.
 		&cli.StringFlag{
 			Name:        "api-key",
 			Sources:     cli.EnvVars("PLUGIN_API_KEY", "GITHUB_COMMENT_API_KEY"),
@@ -72,6 +78,9 @@ func Flags(settings *Settings, category string) []cli.Flag {
 			Category:    category,
 			Required:    true,
 		},
+		// Api url.
+		//
+		// Only need to be changed for GitHub enterprise in most cases.
 		&cli.StringFlag{
 			Name:        "base-url",
 			Sources:     cli.EnvVars("PLUGIN_BASE_URL", "GITHUB_COMMENT_BASE_URL"),
@@ -80,6 +89,9 @@ func Flags(settings *Settings, category string) []cli.Flag {
 			Destination: &settings.BaseURL,
 			Category:    category,
 		},
+		// Unique identifier to assign to a comment.
+		//
+		// The identifier is used to update an existing comment.
 		&cli.StringFlag{
 			Name:        "key",
 			Sources:     cli.EnvVars("PLUGIN_KEY", "GITHUB_COMMENT_KEY"),
@@ -87,6 +99,7 @@ func Flags(settings *Settings, category string) []cli.Flag {
 			Destination: &settings.Key,
 			Category:    category,
 		},
+		// Path to file or string that contains the comment text.
 		&cli.StringFlag{
 			Name:        "message",
 			Sources:     cli.EnvVars("PLUGIN_MESSAGE", "GITHUB_COMMENT_MESSAGE"),
@@ -95,6 +108,7 @@ func Flags(settings *Settings, category string) []cli.Flag {
 			Category:    category,
 			Required:    true,
 		},
+		// Enable update of an existing comment that matches the key.
 		&cli.BoolFlag{
 			Name:        "update",
 			Sources:     cli.EnvVars("PLUGIN_UPDATE", "GITHUB_COMMENT_UPDATE"),
@@ -103,6 +117,7 @@ func Flags(settings *Settings, category string) []cli.Flag {
 			Destination: &settings.Update,
 			Category:    category,
 		},
+		// Skip comment creation if the given message file does not exist.
 		&cli.BoolFlag{
 			Name:        "skip-missing",
 			Sources:     cli.EnvVars("PLUGIN_SKIP_MISSING", "GITHUB_COMMENT_SKIP_MISSING"),
