@@ -10,7 +10,7 @@ import (
 
 	"github.com/rs/zerolog/log"
 	gh "github.com/thegeeklab/wp-github-comment/github"
-	plugin_file "github.com/thegeeklab/wp-plugin-go/v6/file"
+	plugin_file "github.com/thegeeklab/wp-plugin-go/v7/file"
 )
 
 var ErrPluginEventNotSupported = errors.New("event not supported")
@@ -29,10 +29,13 @@ func (p *Plugin) run(ctx context.Context) error {
 
 // Validate handles the settings validation of the plugin.
 func (p *Plugin) Validate() error {
-	var err error
+	metadata, err := p.GetMetadata()
+	if err != nil {
+		return fmt.Errorf("error while getting metadata: %w", err)
+	}
 
-	if p.Metadata.Pipeline.Event != "pull_request" {
-		return fmt.Errorf("%w: %s", ErrPluginEventNotSupported, p.Metadata.Pipeline.Event)
+	if metadata.Pipeline.Event != "pull_request" {
+		return fmt.Errorf("%w: %s", ErrPluginEventNotSupported, metadata.Pipeline.Event)
 	}
 
 	if p.Settings.Message != "" {
@@ -51,7 +54,7 @@ func (p *Plugin) Validate() error {
 	}
 
 	if p.Settings.Key == "" {
-		key := fmt.Sprintf("%s/%s/%d", p.Metadata.Repository.Owner, p.Metadata.Repository.Name, p.Settings.IssueNum)
+		key := fmt.Sprintf("%s/%s/%d", metadata.Repository.Owner, metadata.Repository.Name, p.Settings.IssueNum)
 		hash := sha256.Sum256([]byte(key))
 		p.Settings.Key = fmt.Sprintf("%x", hash)
 	}
@@ -65,6 +68,16 @@ func (p *Plugin) Validate() error {
 
 // Execute provides the implementation of the plugin.
 func (p *Plugin) Execute() error {
+	metadata, err := p.GetMetadata()
+	if err != nil {
+		return fmt.Errorf("error while getting metadata: %w", err)
+	}
+
+	network, err := p.GetNetwork()
+	if err != nil {
+		return fmt.Errorf("error while getting network configuration: %w", err)
+	}
+
 	if p.Settings.SkipMissing && !p.Settings.IsFile {
 		log.Info().
 			Msg("comment skipped: 'message' is not a valid path or file does not exist while 'skip-missing' is enabled")
@@ -78,15 +91,15 @@ func (p *Plugin) Execute() error {
 	}
 
 	client.Issue.Opt = gh.IssueOptions{
-		Repo:    p.Metadata.Repository.Name,
-		Owner:   p.Metadata.Repository.Owner,
+		Repo:    metadata.Repository.Name,
+		Owner:   metadata.Repository.Owner,
 		Message: p.Settings.Message,
 		Update:  p.Settings.Update,
 		Key:     p.Settings.Key,
-		Number:  int(p.Metadata.Curr.PullRequest),
+		Number:  int(metadata.Curr.PullRequest),
 	}
 
-	_, err = client.Issue.AddComment(p.Network.Context)
+	_, err = client.Issue.AddComment(network.Context)
 	if err != nil {
 		return fmt.Errorf("failed to create or update comment: %w", err)
 	}
