@@ -17,6 +17,7 @@ const (
 	DefaultAPIHost = "api.github.com"
 )
 
+// ErrCommentNotFound is returned when no existing comment matches the configured key.
 var ErrCommentNotFound = errors.New("comment not found")
 
 type Client struct {
@@ -56,7 +57,7 @@ func NewClient(baseURL *url.URL, token string) (*Client, error) {
 	return &Client{
 		client: c,
 		Issue: &Issue{
-			client: &IssueServiceImpl{client: c},
+			client: c.Issues,
 			Opt:    IssueOptions{},
 		},
 	}, nil
