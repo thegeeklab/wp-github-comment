@@ -13,6 +13,7 @@ import (
 	plugin_file "github.com/thegeeklab/wp-plugin-go/v8/file"
 )
 
+// ErrPluginEventNotSupported is returned when the pipeline event is not a pull request.
 var ErrPluginEventNotSupported = errors.New("event not supported")
 
 func (p *Plugin) run(ctx context.Context) error {
